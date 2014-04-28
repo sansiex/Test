@@ -47,3 +47,6 @@ reference/
 jscoverage_lib/
 temp/
 
+# Java
+.class
+
