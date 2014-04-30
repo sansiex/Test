@@ -4,9 +4,9 @@ import java.util.Stack;
 
 import utils.JsonUtils;
 
-public class Solution {
+public class LargestRectangleInHistogram {
 	public static void main(String[] args){
-		Solution sln=new Solution();
+		LargestRectangleInHistogram sln=new LargestRectangleInHistogram();
 		int[] input=new int[3000000];
 		for(int i=0;i<input.length;i++){
 			input[i]=i;
