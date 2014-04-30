@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -33,14 +33,60 @@ public class MinesweeperMaster {
 		log("Time spent: "+(e-s)+" ms");
 	}
 	
+	public static ArrayList<int[]> spread(char[][] b, int[] act, int cur_s, int s){
+		int[][] nb={{-1,-1},{-1,0},{0,-1},{-1,1},{0,1},{1,1},{1,0},{1,-1}};
+		ArrayList<int[]> list=new ArrayList<>();
+		ArrayList<int[]> trace=new ArrayList<>();
+		for(int[] c:nb){
+			int[] cur={c[0]+act[0],c[1]+act[1]};
+			if(c[0]+act[0]<0 || c[1]+act[1]<0 || cur[0]>=b.length || cur[1]>=b[0].length || b[cur[0]][cur[1]]!=0){
+				continue;
+			}else{
+				list.add(cur);
+				b[cur[0]][cur[1]]='.';
+			}
+		}
+		
+		if(list.size()+cur_s>s){
+			for(int[] c:list){
+				b[c[0]][c[1]]=0;
+			}
+			return null;
+		}else if(list.size()+cur_s<s){
+			trace.addAll(list);
+			for(int[] c:list){
+				ArrayList<int[]> fill=spread(b,c,cur_s+trace.size(),s);
+				if(fill==null){
+					continue;
+				}else{
+					if(fill.size()+trace.size()+cur_s==s){
+						trace.addAll(fill);
+						return trace;
+					}else{
+						trace.addAll(fill);
+					}
+				}
+			}
+//			if(trace.size()==list.size()){
+//				for(int[] c:list){
+//					b[c[0]][c[1]]=0;
+//				}
+//			}
+			return trace;
+		}else{
+			return trace;
+		}
+	}
+	
 	public static void solve(BufferedReader reader) throws IOException{
 		long t=Long.parseLong(reader.readLine());
-		
+		log(t);
 		String line = "";
 		StringBuilder sb=new StringBuilder();
 		
 		for(int piter=1;piter<=t;piter++){
 			line = reader.readLine();
+			log(line);
 			String[] strarr=line.split(" ");
 			
 			int r=Integer.parseInt(strarr[0]);
@@ -48,62 +94,21 @@ public class MinesweeperMaster {
 			int m=Integer.parseInt(strarr[2]);
 
 			char[][] b=new char[r][c];
-			
+			b[0][0]='c';
 			if(r*c<=m){
 				b=null;
 			}else{
 				int s=r*c-m;
 				int curs=1;
 				int[] start={0,0};
-				Stack<int[]> trace=new Stack<>();
-				trace.add(start);
-				Queue<int[]> act=new LinkedList<>();
-				act.add(start);
-				HashSet<int[]> set=new HashSet<>();
-				set.add(start);
-				
-				b[0][0]='c';
-				
-				while(trace.size()>0){
-					if(act.size()==0){
-						
-					}
-					
-					int[] cur=act.poll();
-					final int[][] nb={{-1,1},{0,1},{1,1},{1,0},{1,-1}};
-					ArrayList<int[]> temp=new ArrayList<>();
-					
-					for(int i=0;i<nb.length;i++){
-						int[] sch={cur[0]+nb[i][0],cur[1]+nb[i][1]};
-						
-						if(set.contains(sch) || sch[0]<0 || sch[0]>=r || sch[1]<0 || sch[1]>=c){
-							continue;
-						}
-						
-						temp.add(sch);
-					}
-					
-					if(temp.size()+curs>s || temp.size()==0){
-						continue;
-					}else if(temp.size()+curs<s){
-						curs+=temp.size();
-						trace.addAll(temp);
-						act.addAll(temp);
-						set.addAll(temp);
-						for(int[] cell:temp){
-							b[cell[0]][cell[1]]='.';
-						}
-					}else{
-						//win
-						for(int[] cell:temp){
-							b[cell[0]][cell[1]]='.';
-						}
-						
-						for(char[] row:b){
-							for(int i=0;i<row.length;i++){
-								if(row[i]!='c' && row[i]!='.'){
-									row[i]='*';
-								}
+				ArrayList<int[]> ret=spread(b,start,curs,s);
+				if(ret==null){
+					b=null;
+				}else{
+					for(char[] row: b){
+						for(int i=0;i<row.length;i++){
+							if(row[i]==0){
+								row[i]='*';
 							}
 						}
 					}
@@ -114,6 +119,7 @@ public class MinesweeperMaster {
 			sb.append(System.lineSeparator());
 			if(b==null){
 				sb.append("Impossible");
+				sb.append(System.lineSeparator());
 			}else{
 				for(char[] row:b){
 					for(int i=0;i<row.length;i++){

@@ -9,7 +9,7 @@ import utils.JsonUtils;
 public class SumRoottoLeafNumbers {
 	public static void main(String[] args){
 		SumRoottoLeafNumbers sln=new SumRoottoLeafNumbers();
-		TreeNode input=InitUtils.getTree("0_1,1_2,2_3,3_0,5_0,6_5");
+		TreeNode input=InitUtils.getTree("0_1,1_2,2_3,3_0,5_0,6_5,7_1");
 		long s=System.currentTimeMillis();
 		Object output=sln.sumNumbers(input);
 		long e=System.currentTimeMillis();

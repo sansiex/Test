@@ -1,74 +1,49 @@
 package leetcode;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Stack;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
 import utils.JsonUtils;
 
 public class Solution {
 	public static void main(String[] args){
 		Solution sln=new Solution();
-		TreeNode input=InitUtils.getTree("0_1,1_2,2_3,3_0,5_0,6_5");
+		int[] input=new int[10000];
+		for(int i=0;i<input.length;i++){
+			input[i]=i;
+		}
+		//int[] input={0,9};
+		int input2=3;
 		long s=System.currentTimeMillis();
-		Object output=sln.sumNumbers(input);
+		Object output=sln.largestRectangleArea(input);
+		//sln.merge(input,5,input2,input2.length);
 		long e=System.currentTimeMillis();
 		System.out.println(e-s+" ms");
 		System.out.println(JsonUtils.toJson(output));
 	}
 	
-	public int sumNumbers(TreeNode root) {
-		return sumNumbers(root, 0);
-//        if(root==null){
-//        	return 0;
-//        }
-//		Stack<TreeNode> trace=new Stack<TreeNode>();
-//		HashSet<TreeNode> set=new HashSet<TreeNode>();
-//		trace.push(root);
-//		int cur=0;
-//		int sum=0;
-//		
-//		while(!trace.isEmpty()){
-//			TreeNode n=trace.peek();
-//			if(set.contains(n)){
-//				cur=(cur-n.val)/10;
-//				trace.pop();
-//				set.remove(n);
-//				continue;
-//			}
-//			
-//			cur=cur*10+n.val;
-//			if(n.right==null & n.left==null){
-//				sum+=cur;
-//				cur=(cur-n.val)/10;
-//				trace.pop();
-//			}else{
-//				set.add(n);
-//				if(n.right!=null){
-//					trace.push(n.right);
-//				}
-//				if(n.left!=null){
-//					trace.push(n.left);
-//				}
-//			}
-//		}
-//		
-//		return sum;
+	public int largestRectangleArea(int[] height) {
+		int max=0;
+        for(int i=0;i<height.length;i++){
+        	if(i>0 && height[i]<=height[i-1]){
+        		continue;
+        	}
+        	int ceil=height[i];
+        	for(int j=i;j<height.length;j++){
+        		if(height[j]<ceil){
+        			ceil=height[j];        			
+        		}
+        		int area=(j-i+1)*ceil;
+        		if(area>max){
+        			max=area;
+        		}else if((height.length-i)*ceil<=max){
+        			break;
+        		}
+        	}
+        }
+        return max;
     }
-	
-	public int sumNumbers(TreeNode root, int preSum) {
-		if(root==null){
-			return 0;
-		}
-		
-		int num=preSum*10+root.val;
-		if(root.left==null && root.right==null){
-			return num;
-		}
-		int res=0;	
-		res+=sumNumbers(root.left,num);
-		res+=sumNumbers(root.right,num);
-		return res;
-	}
 }
 
