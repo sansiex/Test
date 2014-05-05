@@ -12,10 +12,12 @@ import java.util.List;
 import utils.FileHelper;
 import utils.JsonUtils;
 
-//http://code.google.com/codejam/contest/2994486/dashboard#s=p2
+//http://code.google.com/codejam/contest/2994486/dashboard
+//small solved
+//large solved
 
 
-public class Solution {
+public class TheRepeater {
 	
 	public static final String TINPUT="E:\\test.in";
 	public static final String SINPUT="E:\\small.in";
@@ -35,7 +37,7 @@ public class Solution {
 		String line = "";
 		StringBuilder sb=new StringBuilder();
 		
-		for(int pitr=1;pitr<=t;pitr++){
+		for(int i=1;i<=t;i++){
 			line = read(reader);			
 			int n=Integer.parseInt(line);
 			
@@ -120,7 +122,7 @@ public class Solution {
 				result=""+act;
 			}
 			
-			String append="Case #"+pitr+": "+result+System.lineSeparator();
+			String append="Case #"+i+": "+result+System.lineSeparator();
 			log("UC:"+JsonUtils.toJson(clist));
 			log(append);
 			sb.append(append);
